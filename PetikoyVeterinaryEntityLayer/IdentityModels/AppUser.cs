@@ -22,10 +22,10 @@ namespace PetikoyVeterinaryEntityLayer.IdentityModels
         public DateTime BirthDate { get; set; }
         public bool IsPassive { get; set; }
 
+        //05539811232
         [Required]
         [StringLength(11,MinimumLength =11)]
         [RegularExpression("^[0-9]*",ErrorMessage ="Telefon rakamlardan oluşmalıdır")]
-
         public override string PhoneNumber { get; set; }
 
 
