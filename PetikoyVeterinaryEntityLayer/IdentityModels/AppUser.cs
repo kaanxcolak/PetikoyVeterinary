@@ -19,7 +19,7 @@ namespace PetikoyVeterinaryEntityLayer.IdentityModels
         [Required]
         [StringLength(50,MinimumLength =2)]
         public string LastName { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public bool IsPassive { get; set; }
 
         //05539811232

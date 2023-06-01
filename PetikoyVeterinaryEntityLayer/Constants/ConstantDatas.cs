@@ -9,7 +9,7 @@ namespace PetikoyVeterinaryEntityLayer.Constants
     public class ConstantDatas
     {
         public static string CUSTOMERROLE { get; set; } = "Customer";
-        public static string ADMINROLE { get; set; } = "Admin";
+        public static string VETERINARYROLE { get; set; } = "Veterinary";
         
     }
 }

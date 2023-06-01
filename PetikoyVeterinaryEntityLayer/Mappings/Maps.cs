@@ -15,10 +15,14 @@ namespace PetikoyVeterinaryEntityLayer.Mappings
         public Maps()
         {
             //AutoMapper sayesinde modellerimiz ile VMlerimizi birleştirdik
-            CreateMap<Animal, AnimalVM>().ReverseMap();
+            CreateMap<Appointment, AppointmentVM>().ReverseMap();
             CreateMap<City, CityVM>().ReverseMap();
-            CreateMap<Customer, CustomerVM>().ReverseMap();
+            CreateMap<Clinic, ClinicVM>().ReverseMap();
+            CreateMap<ContactClinic, ContactClinicVM>().ReverseMap();
             CreateMap<District, DistrictVM>().ReverseMap();
+            CreateMap<Pet, PetVM>().ReverseMap();
+            CreateMap<PetInfoBlog, PetInfoBlogVM>().ReverseMap();
+
         }
         
 

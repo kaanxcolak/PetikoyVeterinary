@@ -16,7 +16,7 @@ namespace PetikoyVeterinaryEntityLayer.ViewModels
         public int CityId { get; set; }
 
 
-        public CityVM City { get; set; } // CityId propertysi Foregin KEy olacağı için burada City Tablosuyla ilişkisi kuruldu.
+        public CityVM? City { get; set; } // CityId propertysi Foregin KEy olacağı için burada City Tablosuyla ilişkisi kuruldu.
 
     }
 }
