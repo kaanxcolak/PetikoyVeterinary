@@ -25,10 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ImplementationsOfManagers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\PetikoyVeterinaryDataLayer\PetikoyVeterinaryDataLayer.csproj" />
     <ProjectReference Include="..\PetikoyVeterinaryEntityLayer\PetikoyVeterinaryEntityLayer.csproj" />
   </ItemGroup>
 

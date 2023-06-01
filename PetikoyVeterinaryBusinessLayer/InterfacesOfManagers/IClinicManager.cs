@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetikoyVeterinaryBusinessLayer.InterfacesOfManagers
 {
-    public interface IAnimalManager:IManager<AnimalVM,int>
+    public interface IClinicManager : IManager<ClinicVM,int>
     {
     }
 }
