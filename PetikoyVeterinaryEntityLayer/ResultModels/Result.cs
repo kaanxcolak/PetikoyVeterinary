@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PetikoyVeterinaryEntityLayer.ResultModels
 {
-    public class Result
+    public class Result:IResult
     {
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
