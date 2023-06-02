@@ -10,23 +10,26 @@ namespace PetikoyVeterinaryEntityLayer.IdentityModels
 {
     public class AppUser:IdentityUser
     {
-        public DateTime CreatedDate { get; set; }
+        [Required]
+        [StringLength(50, MinimumLength = 2)]
+        public string Name { get; set; }
 
         [Required]
-        [StringLength(50,MinimumLength =2)]
-        public string FirstName { get; set; }
+        [StringLength(50, MinimumLength = 2)]
+        public string Surname { get; set; }
 
         [Required]
-        [StringLength(50,MinimumLength =2)]
-        public string LastName { get; set; }
-        public DateTime? BirthDate { get; set; }
-        public bool IsPassive { get; set; }
+        [StringLength(11, MinimumLength = 11)]
+        public string TcNo { get; set; }
 
-        //05539811232
         [Required]
-        [StringLength(11,MinimumLength =11)]
-        [RegularExpression("^[0-9]*",ErrorMessage ="Telefon rakamlardan oluşmalıdır")]
+        [StringLength(50, MinimumLength = 5)]
+        public override string Email { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 10)]
         public override string PhoneNumber { get; set; }
+
 
 
 

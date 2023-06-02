@@ -30,8 +30,4 @@
     <ProjectReference Include="..\PetikoyVeterinaryDataLayer\PetikoyVeterinaryDataLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
-  </ItemGroup>
-
 </Project>
