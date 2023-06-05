@@ -134,7 +134,7 @@ namespace PetikoyVeterinaryUI.Controllers
                 }
                 var signinResult =
                  _signInManager.PasswordSignInAsync(user, model.Password, true, true).Result;
-                TempData["LoggedInUsername"] = user.UserName; //username sayisal deger olarak geliyor.
+                TempData["LoggedInUsername"] = user.UserName; //username sayisal deger olarak geliyor!
                 TempData["LoggedInNameSurname"] = $"{user.Name} {user.Surname}";
 
                 if (!signinResult.Succeeded)
@@ -160,7 +160,7 @@ namespace PetikoyVeterinaryUI.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Beklenmedik bir hata olustu!");
+                ModelState.AddModelError("", "Beklenmedik hata olustu!");
                 return View(model);
             }
         }
