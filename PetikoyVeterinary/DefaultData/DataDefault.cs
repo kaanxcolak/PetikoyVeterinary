@@ -12,7 +12,7 @@ namespace PetikoyVeterinaryUI.DefaultData
         {
             try
             {
-                //admin || customer
+                //veterinary || customer
                 string[] roles = new string[] { "Customer", "Veterinary" };
 
                 // rolleri tek tek dönüp sisteme olup olmadığına bakacağız. Yoksa ekleyeceğiz!
