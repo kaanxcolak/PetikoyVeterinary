@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace PetikoyVeterinaryUI.Controllers
             _roleManager = roleManager;
             _signInManager = signInManager;
             _contactClinicManager = contactClinicManager;
-            _emailSender =  emailSender;
+            _emailSender = emailSender;
         }
 
         //private readonly IClinicManager _clinicManager;
@@ -93,7 +94,7 @@ namespace PetikoyVeterinaryUI.Controllers
                 {
 
                     var roleResult = _userManager.AddToRoleAsync(user, ConstantDatas.VETERINARYROLE).Result;
-                    
+
                     if (roleResult.Succeeded)
                     {
                         TempData["RegisterSuccessMsg"] = "Kayıt başarılı!";
@@ -219,14 +220,45 @@ namespace PetikoyVeterinaryUI.Controllers
                     PetInfo = model.PetInfo,
                     Name = model.Name,
                     SurName = model.SurName,
-                    Phone=model.Phone,
+                    Phone = model.Phone,
                     Email = model.Email,
-                    Question=model.Question
+                    Question = model.Question
                 };
                 var result = _contactClinicManager.Add(contact);
                 if (result.IsSuccess)
                 {
-                    To
+                    var email = new EmailMessage()
+                    {
+                        //To = "infoPetikoyVeterinary@gmail.com",
+                        //Subject = $"Petikoy Veterinary Contact",
+                        ////body içinde html yazılıyor
+                        //Body = $"<html lang='tr'><head></head><body>" +
+                        //$"Adım {contact.Name} {contact.SurName},<br/>" +
+                        //$"Evcil hayvanım {contact.PetInfo} " +
+                        //$"Evcil hayvanım ile alakalı sorun {contact.Question}" +
+                        //$"{contact.Phone} numarasından veya {contact.Email} email adresinden benimle iletişim kurabilirsiniz!" +
+                        //$"</body></hmtl>"
+                        To = new string[] { contact.Email },
+                        Subject = $"Petikoy Veterinary Contact",
+                        //body içinde html yazılıyor
+                        Body = $"<html lang='tr'><head></head><body>" +
+                        $"Merhaba Sayın {contact.Name} {contact.SurName},<br/>" +
+                        $"Bilgilerini tanımladığınız {contact.PetInfo} ile alakalı Sisteme kaydınız gerçekleşmiştir. " +
+                        $"{contact.Phone} numarasından veya {contact.Email} adresinden sizinle yakın zamanda iletişime geçilecektir. Teşekkürler... " +
+                        $"</body></hmtl>"
+                    };
+                    //sonra async'ye çevirelim
+                    _emailSender.SendEmail(email);
+
+                    // login sayfasına yönlendirilecek
+                    TempData["RegisterSuccessMessage"] = $"{contact.Name} {contact.SurName} kaydınız gerçekleşti...";
+
+                    return RedirectToAction("Home", "Index", new { email = model.Email });
+                }
+                else
+                {
+                    ModelState.AddModelError("", result.Message);
+                    return View(model);
                 }
             }
             catch (Exception ex)
