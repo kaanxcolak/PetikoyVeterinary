@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PetikoyVeterinary.Models;
+using PetikoyVeterinaryBusinessLayer.EmailSenderBusiness;
 using PetikoyVeterinaryBusinessLayer.InterfacesOfManagers;
 using PetikoyVeterinaryEntityLayer.Constants;
 using PetikoyVeterinaryEntityLayer.IdentityModels;
+using PetikoyVeterinaryEntityLayer.ViewModels;
 using PetikoyVeterinaryUI.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PetikoyVeterinaryUI.Controllers
 {
@@ -14,12 +20,20 @@ namespace PetikoyVeterinaryUI.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<AppRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IContactClinicManager _contactClinicManager;
+        private readonly IEmailSender _emailSender;
 
-        public AdminController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager)
+        const int keySize = 64;
+        const int iterations = 350000;
+        HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+
+        public AdminController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, IContactClinicManager contactClinicManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _contactClinicManager = contactClinicManager;
+            _emailSender =  emailSender;
         }
 
         //private readonly IClinicManager _clinicManager;
@@ -164,6 +178,65 @@ namespace PetikoyVeterinaryUI.Controllers
                 return View(model);
             }
         }
+
+
+        [Authorize]
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
+        private string HashPasword(string password, out byte[] salt)
+        {
+            salt = RandomNumberGenerator.GetBytes(keySize);
+            var hash = Rfc2898DeriveBytes.Pbkdf2(
+                Encoding.UTF8.GetBytes(password),
+            salt,
+            iterations,
+                hashAlgorithm,
+                keySize);
+            return Convert.ToHexString(hash);
+        }
+        private bool VerifyPassword(string password, string hash, byte[] salt)
+        {
+            var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashAlgorithm, keySize);
+
+            return hashToCompare.SequenceEqual(Convert.FromHexString(hash));
+        }
+
+        public IActionResult ContactClinic(ContactClinicVM model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Gerekli alanları lütfen doldurunuz!");
+                    return View(model);
+                }
+
+                ContactClinicVM contact = new ContactClinicVM()
+                {
+                    PetInfo = model.PetInfo,
+                    Name = model.Name,
+                    SurName = model.SurName,
+                    Phone=model.Phone,
+                    Email = model.Email,
+                    Question=model.Question
+                };
+                var result = _contactClinicManager.Add(contact);
+                if (result.IsSuccess)
+                {
+                    To
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Beklenmedik bir hata oluştu " + ex.Message);
+                return View(model);
+            }
+        }
+
+
 
 
 
