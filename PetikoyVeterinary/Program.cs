@@ -1,8 +1,14 @@
+using AutoMapper.Extensions.ExpressionMapping;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PetikoyVeterinaryBusinessLayer.EmailSenderBusiness;
+using PetikoyVeterinaryBusinessLayer.ImplementationsOfManagers;
 using PetikoyVeterinaryBusinessLayer.InterfacesOfManagers;
 using PetikoyVeterinaryDataLayer;
+using PetikoyVeterinaryDataLayer.ImplementationsOfRepo;
+using PetikoyVeterinaryDataLayer.InterfacesOfRepo;
 using PetikoyVeterinaryEntityLayer.IdentityModels;
+using PetikoyVeterinaryEntityLayer.Mappings;
 using PetikoyVeterinaryUI.DefaultData;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +31,23 @@ builder.Services.AddIdentity<AppUser, AppRole>(options =>
 
 
 }).AddDefaultTokenProviders().AddEntityFrameworkStores<MyContext>();
+
+//AutoMapper ayari eklendi.
+builder.Services.AddAutoMapper(x =>
+{
+    x.AddExpressionMapping();
+    x.AddProfile(typeof(Maps));
+});
+//DI yaþam döngüleri
+
+builder.Services.AddScoped<IContactClinicRepo, ContactClinicRepo>();
+builder.Services.AddScoped<IContactClinicManager, ContactClinicManager>();
+
+
+
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

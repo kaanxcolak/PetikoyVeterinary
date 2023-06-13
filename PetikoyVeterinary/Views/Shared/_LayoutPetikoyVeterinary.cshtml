@@ -77,8 +77,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto py-0">
-                <a href="index.html" class="nav-item nav-link active">Home</a>
-                <a href="about.html" class="nav-item nav-link">About</a>
+                <a asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Home</a>
+                <a asp-controller="Home" asp-action="About" class="nav-item nav-link">About</a>
                 <a href="service.html" class="nav-item nav-link">Service</a>
                 <a href="product.html" class="nav-item nav-link">Appointment</a>
                 <div class="nav-item dropdown">
@@ -90,7 +90,7 @@
                         <a href="detail.html" class="dropdown-item">Blog Detail</a>
                     </div>
                 </div>
-                <a href="_LayoutContact.cshtml" class="nav-item nav-link nav-contact bg-primary text-white px-5 ms-lg-5">Contact <i class="bi bi-arrow-right"></i></a>
+                <a asp-controller="Home" asp-action="ContactClinic" class="nav-item nav-link nav-contact bg-primary text-white px-5 ms-lg-5">Contact <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </nav>

@@ -205,68 +205,7 @@ namespace PetikoyVeterinaryUI.Controllers
             return hashToCompare.SequenceEqual(Convert.FromHexString(hash));
         }
 
-        public IActionResult ContactClinic(ContactClinicVM model)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    ModelState.AddModelError("", "Gerekli alanları lütfen doldurunuz!");
-                    return View(model);
-                }
-
-                ContactClinicVM contact = new ContactClinicVM()
-                {
-                    PetInfo = model.PetInfo,
-                    Name = model.Name,
-                    SurName = model.SurName,
-                    Phone = model.Phone,
-                    Email = model.Email,
-                    Question = model.Question
-                };
-                var result = _contactClinicManager.Add(contact);
-                if (result.IsSuccess)
-                {
-                    var email = new EmailMessage()
-                    {
-                        //To = "infoPetikoyVeterinary@gmail.com",
-                        //Subject = $"Petikoy Veterinary Contact",
-                        ////body içinde html yazılıyor
-                        //Body = $"<html lang='tr'><head></head><body>" +
-                        //$"Adım {contact.Name} {contact.SurName},<br/>" +
-                        //$"Evcil hayvanım {contact.PetInfo} " +
-                        //$"Evcil hayvanım ile alakalı sorun {contact.Question}" +
-                        //$"{contact.Phone} numarasından veya {contact.Email} email adresinden benimle iletişim kurabilirsiniz!" +
-                        //$"</body></hmtl>"
-                        To = new string[] { contact.Email },
-                        Subject = $"Petikoy Veterinary Contact",
-                        //body içinde html yazılıyor
-                        Body = $"<html lang='tr'><head></head><body>" +
-                        $"Merhaba Sayın {contact.Name} {contact.SurName},<br/>" +
-                        $"Bilgilerini tanımladığınız {contact.PetInfo} ile alakalı Sisteme kaydınız gerçekleşmiştir. " +
-                        $"{contact.Phone} numarasından veya {contact.Email} adresinden sizinle yakın zamanda iletişime geçilecektir. Teşekkürler... " +
-                        $"</body></hmtl>"
-                    };
-                    //sonra async'ye çevirelim
-                    _emailSender.SendEmail(email);
-
-                    // login sayfasına yönlendirilecek
-                    TempData["RegisterSuccessMessage"] = $"{contact.Name} {contact.SurName} kaydınız gerçekleşti...";
-
-                    return RedirectToAction("Home", "Index", new { email = model.Email });
-                }
-                else
-                {
-                    ModelState.AddModelError("", result.Message);
-                    return View(model);
-                }
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", "Beklenmedik bir hata oluştu " + ex.Message);
-                return View(model);
-            }
-        }
+   
 
 
 
