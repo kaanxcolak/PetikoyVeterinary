@@ -9,11 +9,13 @@ namespace PetikoyVeterinary.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IAppointmentManager _appointmentManager;
         private readonly IContactClinicManager _contactClinicManager;
         private readonly IEmailSender _emailSender;
 
-        public HomeController(IContactClinicManager contactClinicManager, IEmailSender emailSender)
+        public HomeController(IAppointmentManager appointmentManager, IContactClinicManager contactClinicManager, IEmailSender emailSender)
         {
+            _appointmentManager = appointmentManager;
             _contactClinicManager = contactClinicManager;
             _emailSender = emailSender;
         }
@@ -38,6 +40,8 @@ namespace PetikoyVeterinary.Controllers
         {
             return View();
         }
+
+        [HttpPost]
         public IActionResult ContactClinic(ContactClinicVM model)
         {
             try
@@ -101,16 +105,42 @@ namespace PetikoyVeterinary.Controllers
             }
         }
 
-        public IActionResult About() { return View(); } 
+        [HttpGet]
+        public IActionResult About() { return View(); }
 
-        public IActionResult About(PetInfoBlogVM model) 
+        [HttpPost]
+        public IActionResult About(PetInfoBlogVM model)
         {
             //Buraya sonradan bilgilerin girildiği yapı kurulacak
             //Müşterilerin kendi hayvanları hakkında mı yazması yoksa veterinerin mi yazması hakkında bilgi alacaksın
             return View(model);
-        
-        
-        
         }
+
+        [HttpGet]
+        public IActionResult Appointment()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Appointment(AppointmentVM model)
+        {
+            try
+            {
+                var appointmentManager = _appointmentManager.GetAll().Data;
+
+
+                return View(appointmentManager);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Beklenmedik hata oluştu!");
+                return View(model);
+            }
+
+        }
+
+
+
     }
 }

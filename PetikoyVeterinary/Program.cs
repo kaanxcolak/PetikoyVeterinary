@@ -43,7 +43,8 @@ builder.Services.AddAutoMapper(x =>
 builder.Services.AddScoped<IContactClinicRepo, ContactClinicRepo>();
 builder.Services.AddScoped<IContactClinicManager, ContactClinicManager>();
 
-
+builder.Services.AddScoped<IAppointmentRepo, AppointmentRepo>();
+builder.Services.AddScoped<IAppointmentManager, AppointmentManager>();
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 

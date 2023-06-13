@@ -1,0 +1,37 @@
+﻿@model List<AppointmentVM>
+@{
+    ViewData["Title"] = "Appointments";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Appointments</h1>
+<br />
+<h5>Şubeler</h5>
+@*Appointments içindeki verileri burda yazacak*@
+<br />
+<div class="col-12 col-md-3 offset-1 offset-1">
+    <a asp-controller="Home" asp-action="Appointment" style="color:white " class=" btn btn-secondary container"> Yeni Şube Ekle</a>
+</div>
+<div class="col-12 col-md-10 offset-1 offset-1">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <table style="width:100%; border:solid" class="table table-hover">
+        <tr>
+            <th style="border:solid; color:white">MÜŞTERİ</th>
+            <th style="border:solid; color:white">ÇAĞIRDIĞI ADRES</th>
+            <th style="border:solid; color:white">ŞUBE</th>
+
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th style="border:solid; color:white">@item.</th>
+                <th style="border:solid; color:white">@item.CustomerAddressDetails</th>
+                <th style="border:solid; color:white">@item.Branch.Name</th>
+
+            </tr>
+        }
+
+    </table>
+    <br />
+</div> 
