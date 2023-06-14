@@ -19,8 +19,8 @@
         <tr>
             <th style="border:solid; color:blue">CUSTOMER</th>
             <th style="border:solid; color:blue">DATE TIME</th>
-            <th style="border:solid; color:blue">CUSTOMER EMAIL</th>
-            <th style="border:solid; color:blue">CUSTOMER PHONE NUMBER</th>
+            <th style="border:solid; color:blue">IS CANCELED</th>
+            <th style="border:solid; color:blue">IS COMPLETED</th>
             <th style="border:solid; color:blue">DETAILS</th>
             
 
@@ -28,10 +28,11 @@
        @foreach (var item in Model)
         {
             <tr>
-                <th style="border:solid; color:white">@item.Customer</th>
-                <th style="border:solid; color:white">@item.DateTime</th>
-                <th style="border:solid; color:white">@item.IsCanceled</th>
-                <th style="border:solid; color:white">@item.IsCompleted</th>
+                <th style="border:solid; color:black">@item.Customer</th>
+                <th style="border:solid; color:black">@item.DateTime</th>
+                <th style="border:solid; color:black">@item.IsCanceled</th>
+                <th style="border:solid; color:black">@item.IsCompleted</th>
+                <th style="border:solid; color:black">@item.Details</th>
 
             </tr>
         }

@@ -226,7 +226,7 @@ namespace PetikoyVeterinaryUI.Controllers
         {
             try
             {
-                //ViewBag.Cities = _cityManager.GetAll(x => !x.IsRemoved).Data;
+                
                 if (!ModelState.IsValid)
                 {
                     ModelState.AddModelError("", "Bilgileri düzgün giriniz");
@@ -238,7 +238,7 @@ namespace PetikoyVeterinaryUI.Controllers
 
                 if (sameAppointment != null)
                 {
-                    ModelState.AddModelError("", "jh");
+                    ModelState.AddModelError("", "Randevu var!");
                     return View(model);
                 }
 
@@ -274,8 +274,8 @@ namespace PetikoyVeterinaryUI.Controllers
                     Customer = $"{model.CustomerInfo.Name} {model.CustomerInfo.Surname}",
                     IsCanceled = false,
                     IsCompleted = false,
-                    DateTime = DateTime.Now,                   
-
+                    DateTime = DateTime.Now,           
+                
                 };
 
 
