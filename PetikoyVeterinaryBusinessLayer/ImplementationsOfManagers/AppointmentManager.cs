@@ -15,7 +15,7 @@ namespace PetikoyVeterinaryBusinessLayer.ImplementationsOfManagers
     public class AppointmentManager : Manager<AppointmentVM, Appointment, int>, IAppointmentManager
     {
         public AppointmentManager(IAppointmentRepo repo, IMapper mapper)
-            : base(repo, mapper, "District")
+            : base(repo, mapper, "Clinic")
         {
         }
     }

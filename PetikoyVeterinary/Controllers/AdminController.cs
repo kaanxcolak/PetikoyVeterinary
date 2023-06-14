@@ -1,10 +1,13 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using AutoMapper;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using PetikoyVeterinary.Models;
 using PetikoyVeterinaryBusinessLayer.EmailSenderBusiness;
+using PetikoyVeterinaryBusinessLayer.ImplementationsOfManagers;
 using PetikoyVeterinaryBusinessLayer.InterfacesOfManagers;
 using PetikoyVeterinaryEntityLayer.Constants;
 using PetikoyVeterinaryEntityLayer.IdentityModels;
@@ -23,19 +26,26 @@ namespace PetikoyVeterinaryUI.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IContactClinicManager _contactClinicManager;
         private readonly IEmailSender _emailSender;
+        private readonly IAppointmentManager _appointmentManager;
+        private readonly IMapper _mapper;
+
 
         const int keySize = 64;
         const int iterations = 350000;
         HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
 
-        public AdminController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, IContactClinicManager contactClinicManager, IEmailSender emailSender)
+        public AdminController(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, SignInManager<AppUser> signInManager, IContactClinicManager contactClinicManager, IEmailSender emailSender, IAppointmentManager appointmentManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _contactClinicManager = contactClinicManager;
             _emailSender = emailSender;
+            _appointmentManager = appointmentManager;
+            _mapper = mapper;
         }
+
+
 
         //private readonly IClinicManager _clinicManager;
         //private readonly ICityManager _cityManager;
@@ -43,7 +53,8 @@ namespace PetikoyVeterinaryUI.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var model = _appointmentManager.GetAll().Data;
+            return View(model.ToList());
         }
 
         [HttpGet]
@@ -204,8 +215,117 @@ namespace PetikoyVeterinaryUI.Controllers
 
             return hashToCompare.SequenceEqual(Convert.FromHexString(hash));
         }
+        [HttpGet]
+        public IActionResult Appointment()
+        {
+            return View();
+        }
 
-   
+        [HttpPost]
+        public IActionResult Appointment(AppointmentViewModel model)
+        {
+            try
+            {
+                //ViewBag.Cities = _cityManager.GetAll(x => !x.IsRemoved).Data;
+                if (!ModelState.IsValid)
+                {
+                    ModelState.AddModelError("", "Bilgileri düzgün giriniz");
+                    return View(model);
+                }
+
+                var sameAppointment = _appointmentManager.GetByConditions(x => x.ClinicId == model.ClinicId && x.DateTime == model.DateTime).Data;
+
+
+                if (sameAppointment != null)
+                {
+                    ModelState.AddModelError("", "jh");
+                    return View(model);
+                }
+
+                // müşteriden var mı?
+                //yoksa ekle
+                var customer = _userManager.FindByEmailAsync(model.CustomerInfo.Email).Result;
+
+                if (customer == null)
+                {
+
+                    AppUser user = new AppUser()
+                    {
+                        UserName = model.CustomerInfo.TcNo,
+                        Name = model.CustomerInfo.Name,
+                        Surname = model.CustomerInfo.Surname,
+                        TcNo = model.CustomerInfo.TcNo,
+                        PhoneNumber = model.CustomerInfo.PhoneNumber,
+                        Email = model.CustomerInfo.Email,
+                        EmailConfirmed = true,
+                    };
+
+                    var result = _userManager.CreateAsync(user, model.CustomerInfo.TcNo).Result;
+                    if (result.Succeeded)
+                    {
+                        var roleResult = _userManager.AddToRoleAsync(user, "Customer").Result;
+                    }
+                }
+                AppointmentViewModel appointment = new AppointmentViewModel()
+                {
+
+                    ClinicId = 1, // giriş yapan veteriner
+                    Details = model.Details,
+                    Customer = $"{model.CustomerInfo.Name} {model.CustomerInfo.Surname}",
+                    IsCanceled = false,
+                    IsCompleted = false,
+                    DateTime = DateTime.Now,                   
+
+                };
+
+
+                if (_appointmentManager.Add(_mapper.Map<AppointmentVM>(appointment)).IsSuccess)
+                {
+                    TempData["AppointmentSuccessMsg"] = "Kayıt başarılı!";
+                    return RedirectToAction("Appointment", "admin");
+
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Kullanıcı oluştu! Ancak rolü atanamadı! Sistem yöneticisine ulaşarak rol ataması yapılmalıdır!");
+                    return View(model);
+
+                }
+
+
+
+            }
+
+            catch (Exception ex)
+            {
+                return View(model);
+            }
+
+        }
+
+        [HttpPost]
+        public IActionResult AllAppointments()
+        {
+            try
+            {
+                var appointmentManager = _appointmentManager.GetAll().Data;
+
+
+                return View(_appointmentManager);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Beklenmedik bir hata olustu!" + ex.Message);
+                return View(new List<AppointmentVM>());
+            }
+
+
+        }
+
+
+
+
+
 
 
 

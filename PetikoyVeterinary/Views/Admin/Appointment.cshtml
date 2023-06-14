@@ -1,0 +1,50 @@
+﻿@model AppointmentViewModel
+@{
+    ViewData["Title"] = "Appointment";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid pt-5">
+    <div class="container">
+        <div class="border-start border-5 border-primary ps-5 mb-5" style="max-width: 600px;">
+            
+            <h1 class="display-5 text-uppercase mb-0">create Appoıntment </h1>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-7">
+                <form asp-controller="Admin" asp-action="Appointment" method="post">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="CustomerInfo.Name"
+                            placeholder="Name" style="height: 55px;">
+                        </div>
+                        <div class="col-12">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="CustomerInfo.Surname" placeholder="SURNAME" style="height: 55px;">
+                        </div>
+                        <div class="col-12">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="CustomerInfo.TcNo"
+                            placeholder="Tc number" style="height: 55px;">
+                        </div>
+                        <div class="col-12">
+                            <input type="email" class="form-control bg-light border-0 px-4" asp-for="CustomerInfo.Email"
+                            placeholder="Email" style="height: 55px;">
+                        </div>     
+                          <div class="col-12">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="CustomerInfo.PhoneNumber"
+                            placeholder="PhoneNumber" style="height: 55px;">
+                        </div>   
+                        <div class="col-12">
+                            <textarea type="text" class="form-control bg-light border-0 px-4 py-3" asp-for="Details" 
+                            rows="8" placeholder="Details"></textarea>
+                        </div>
+                                           
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary w-100 py-3">KAYDET</button>
+                        </div>
+                    </div>
+                </form>
+            </div>            
+        </div>
+    </div>
+</div>
+<!-- Contact End -->

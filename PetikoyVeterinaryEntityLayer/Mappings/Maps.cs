@@ -22,6 +22,7 @@ namespace PetikoyVeterinaryEntityLayer.Mappings
             CreateMap<District, DistrictVM>().ReverseMap();
             CreateMap<Pet, PetVM>().ReverseMap();
             CreateMap<PetInfoBlog, PetInfoBlogVM>().ReverseMap();
+            CreateMap<AppointmentVM, AppointmentViewModel>().ReverseMap();
 
         }
         
