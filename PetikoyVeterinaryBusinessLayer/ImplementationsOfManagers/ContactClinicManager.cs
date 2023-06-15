@@ -14,7 +14,7 @@ namespace PetikoyVeterinaryBusinessLayer.ImplementationsOfManagers
     public class ContactClinicManager : Manager<ContactClinicVM, ContactClinic, int>, IContactClinicManager
     {
         public ContactClinicManager(IContactClinicRepo repo, IMapper mapper)
-            : base(repo, mapper, "District")
+            : base(repo, mapper, null)
         {
         }
     }

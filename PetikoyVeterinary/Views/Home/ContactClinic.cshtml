@@ -1,4 +1,4 @@
-﻿@model ContactViewModel
+﻿@model ContactClinicVM
 @{
     ViewData["Title"] = "Contact";
     Layout = "~/Views/Shared/_LayoutContact.cshtml";
@@ -12,28 +12,34 @@
         </div>
         <div class="row g-5">
             <div class="col-lg-7">
-                <form>
+                <form asp-controller="Home" asp-action="ContactClinic" method="post">
+                    @*butona basılınca gideceği sayfayı belirledim*@
                     <div class="row g-3">
                         <div class="col-12">
-                            <input type="text" class="form-control bg-light border-0 px-4" placeholder="Your Name" style="height: 55px;">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="Name" 
+                            placeholder="Your Name" style="height: 55px;">
                         </div>
                         <div class="col-12">
-                            <input type="text" class="form-control bg-light border-0 px-4" placeholder="Your SurName" style="height: 55px;">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="SurName"
+                            placeholder="Your SurName" style="height: 55px;">
                         </div>
                         <div class="col-12">
-                            <input type="email" class="form-control bg-light border-0 px-4" placeholder="Your Email" style="height: 55px;">
+                            <input type="email" class="form-control bg-light border-0 px-4" asp-for="Email"
+                            placeholder="Your Email" style="height: 55px;">
                         </div>
                         <div class="col-12">
-                            <input type="text" class="form-control bg-light border-0 px-4" placeholder="Phone" style="height: 55px;">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="Phone"
+                            placeholder="Phone" style="height: 55px;">
                         </div>
                         <div class="col-12">
-                            <input type="text" class="form-control bg-light border-0 px-4" placeholder="Pet Info" style="height: 55px;">
+                            <input type="text" class="form-control bg-light border-0 px-4" asp-for="PetInfo"
+                            placeholder="Pet Info" style="height: 55px;">
                         </div>
                         <div class="col-12">
-                            <textarea class="form-control bg-light border-0 px-4 py-3" rows="8" placeholder="Question"></textarea>
+                            <textarea class="form-control bg-light border-0 px-4 py-3" rows="8" asp-for="Question" placeholder="Question"></textarea>
                         </div>
                         <div class="col-12">
-                            <button asp-controller="Home" asp-action="Index" class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
+                            <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                         </div>
                     </div>
                 </form>

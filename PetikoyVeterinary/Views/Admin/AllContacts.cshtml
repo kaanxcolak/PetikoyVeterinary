@@ -1,0 +1,40 @@
+﻿@model List<ContactClinicVM>
+@{
+    ViewData["Title"] = "AllContacts";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<
+<br />
+<h5>Appointments</h5>
+<br />
+<div class="col-12 col-md-3 offset-1 offset-1">
+    <a asp-controller="Admin" asp-action="Appointment"
+       asp-area="Manager" style="color:white " class=" btn btn-secondary container"> New Appointment Create</a>
+</div>
+<div class="col-12 col-md-10 offset-1 offset-1">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <table style="width:100%; border:solid" class="table table-hover">
+        <tr>
+            <th style="border:solid; color:blue">PERSON</th>
+            <th style="border:solid; color:blue">DATE TIME</th>
+            <th style="border:solid; color:blue">PET INFO</th>
+            <th style="border:solid; color:blue">QUESTION</th>
+
+
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th style="border:solid; color:black">@item.Name @item.SurName <br />@item.Email <br />@item.Phone</th>
+                <th style="border:solid; color:black">@item.CreatedDate.ToString("dd/MM/yyyy HH:mm")</th>
+                <th style="border:solid; color:black">@item.PetInfo</th>
+                <th style="border:solid; color:black">@item.Question</th>
+
+            </tr>
+        }
+
+    </table>
+    <br />
+</div>

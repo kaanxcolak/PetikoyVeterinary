@@ -225,8 +225,7 @@ namespace PetikoyVeterinaryUI.Controllers
         public IActionResult Appointment(AppointmentViewModel model)
         {
             try
-            {
-                
+            {                
                 if (!ModelState.IsValid)
                 {
                     ModelState.AddModelError("", "Bilgileri düzgün giriniz");
@@ -248,7 +247,6 @@ namespace PetikoyVeterinaryUI.Controllers
 
                 if (customer == null)
                 {
-
                     AppUser user = new AppUser()
                     {
                         UserName = model.CustomerInfo.TcNo,
@@ -268,16 +266,13 @@ namespace PetikoyVeterinaryUI.Controllers
                 }
                 AppointmentViewModel appointment = new AppointmentViewModel()
                 {
-
                     ClinicId = 1, // giriş yapan veteriner
                     Details = model.Details,
                     Customer = $"{model.CustomerInfo.Name} {model.CustomerInfo.Surname}",
                     IsCanceled = false,
                     IsCompleted = false,
-                    DateTime = DateTime.Now,           
-                
+                    DateTime = DateTime.Now,             
                 };
-
 
                 if (_appointmentManager.Add(_mapper.Map<AppointmentVM>(appointment)).IsSuccess)
                 {
@@ -290,10 +285,7 @@ namespace PetikoyVeterinaryUI.Controllers
                     ModelState.AddModelError("", "Kullanıcı oluştu! Ancak rolü atanamadı! Sistem yöneticisine ulaşarak rol ataması yapılmalıdır!");
                     return View(model);
 
-                }
-
-
-
+                } 
             }
 
             catch (Exception ex)
@@ -303,7 +295,7 @@ namespace PetikoyVeterinaryUI.Controllers
 
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult AllAppointments()
         {
             try
@@ -312,6 +304,26 @@ namespace PetikoyVeterinaryUI.Controllers
 
 
                 return View(_appointmentManager);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Beklenmedik bir hata olustu!" + ex.Message);
+                return View(new List<AppointmentVM>());
+            }
+
+
+        }
+
+
+        [HttpGet]
+        public IActionResult AllContacts()
+        {
+            try
+            {
+                var contacts=_contactClinicManager.GetAll().Data;
+
+
+                return View(contacts.ToList());
             }
             catch (Exception ex)
             {

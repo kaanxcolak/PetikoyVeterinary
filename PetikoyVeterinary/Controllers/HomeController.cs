@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using PetikoyVeterinary.Models;
 using PetikoyVeterinaryBusinessLayer.EmailSenderBusiness;
+using PetikoyVeterinaryBusinessLayer.ImplementationsOfManagers;
 using PetikoyVeterinaryBusinessLayer.InterfacesOfManagers;
+using PetikoyVeterinaryEntityLayer.IdentityModels;
 using PetikoyVeterinaryEntityLayer.ViewModels;
 using System.Diagnostics;
 
@@ -9,14 +13,17 @@ namespace PetikoyVeterinary.Controllers
 {
     public class HomeController : Controller
     {
-        
+        private readonly UserManager<AppUser> _userManager;
         private readonly IContactClinicManager _contactClinicManager;
         private readonly IEmailSender _emailSender;
+        private readonly IMapper _mapper;
 
-        public HomeController(IContactClinicManager contactClinicManager, IEmailSender emailSender)
+        public HomeController(UserManager<AppUser> userManager, IContactClinicManager contactClinicManager, IEmailSender emailSender, IMapper mapper)
         {
+            _userManager = userManager;
             _contactClinicManager = contactClinicManager;
             _emailSender = emailSender;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -47,61 +54,39 @@ namespace PetikoyVeterinary.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError("", "Gerekli alanları lütfen doldurunuz!");
+                    ModelState.AddModelError("", "Bilgileri düzgün giriniz");
                     return View(model);
                 }
 
+
                 ContactClinicVM contact = new ContactClinicVM()
                 {
+                    CreatedDate = DateTime.Now,
                     PetInfo = model.PetInfo,
                     Name = model.Name,
                     SurName = model.SurName,
                     Phone = model.Phone,
                     Email = model.Email,
-                    Question = model.Question
+                    Question = model.Question,
                 };
-                var result = _contactClinicManager.Add(contact);
-                if (result.IsSuccess)
+
+                if (_contactClinicManager.Add(contact).IsSuccess)
                 {
-                    var email = new EmailMessage()
-                    {
-                        //To = "infoPetikoyVeterinary@gmail.com",
-                        //Subject = $"Petikoy Veterinary Contact",
-                        ////body içinde html yazılıyor
-                        //Body = $"<html lang='tr'><head></head><body>" +
-                        //$"Adım {contact.Name} {contact.SurName},<br/>" +
-                        //$"Evcil hayvanım {contact.PetInfo} " +
-                        //$"Evcil hayvanım ile alakalı sorun {contact.Question}" +
-                        //$"{contact.Phone} numarasından veya {contact.Email} email adresinden benimle iletişim kurabilirsiniz!" +
-                        //$"</body></hmtl>"
-                        To = new string[] { contact.Email },
-                        Subject = $"Petikoy Veterinary Contact",
-                        //body içinde html yazılıyor
-                        Body = $"<html lang='tr'><head></head><body>" +
-                        $"Merhaba Sayın {contact.Name} {contact.SurName},<br/>" +
-                        $"Bilgilerini tanımladığınız {contact.PetInfo} ile alakalı Sisteme kaydınız gerçekleşmiştir. " +
-                        $"{contact.Phone} numarasından veya {contact.Email} adresinden sizinle yakın zamanda iletişime geçilecektir. Teşekkürler... " +
-                        $"</body></hmtl>"
-                    };
-                    //sonra async'ye çevirelim
-                    _emailSender.SendEmail(email);
+                    TempData["ContactSuccessMsg"] = "Sorunuz kliniğe iletildi!";
+                    return RedirectToAction("Index", "Home");
 
-                    // login sayfasına yönlendirilecek
-                    TempData["RegisterSuccessMessage"] = $"{contact.Name} {contact.SurName} kaydınız gerçekleşti...";
-
-                    return RedirectToAction("Home", "Index", new { email = model.Email });
                 }
                 else
                 {
-                    ModelState.AddModelError("", result.Message);
+                    ModelState.AddModelError("", "Soruyu kaydetme başarısız! Tekrar deneyiniz!");
                     return View(model);
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Beklenmedik bir hata oluştu " + ex.Message);
                 return View(model);
             }
+
         }
 
         [HttpGet]
@@ -115,8 +100,78 @@ namespace PetikoyVeterinary.Controllers
             return View(model);
         }
 
-        
+        //[HttpGet]
+        //public IActionResult CustomerInformations() { return View(); }
+        //[HttpPost]
+        //public IActionResult CustomerInformations(ContactClinicVM model)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //        {
+        //            ModelState.AddModelError("", "Bilgileri düzgün giriniz");
+        //            return View(model);
+        //        }
 
+        //        var sameContact = _contactClinicManager.GetByConditions(x => x.Name == model.Name && x.SurName == model.SurName).Data;
+
+
+        //        if (sameContact != null)
+        //        {
+        //            ModelState.AddModelError("", "Randevu var!");
+        //            return View(model);
+        //        }
+
+        //        // müşteriden var mı?
+        //        //yoksa ekle
+        //        var customer = _userManager.FindByEmailAsync(model.Email).Result;
+
+        //        if (customer == null)
+        //        {
+
+        //            AppUser user = new AppUser()
+        //            {
+        //                Name = model.Name,
+        //                Surname = model.SurName,
+        //                //TcNo = model.TcNo,
+        //                Email = model.Email,
+        //                PhoneNumber = model.Phone,
+        //            };
+
+        //            var result = _userManager.CreateAsync(user, model.Phone).Result;
+        //            if (result.Succeeded)
+        //            {
+        //                var roleResult = _userManager.AddToRoleAsync(user, "Customer").Result;
+        //            }
+        //        }
+        //        ContactClinicVM contact = new ContactClinicVM()
+        //        {
+        //            PetInfo = model.PetInfo,
+        //            Name = model.Name,
+        //            SurName = model.SurName,
+        //            Phone = model.Phone,
+        //            Email = model.Email,
+        //            Question = model.Question,
+        //        };
+
+        //        if (_contactClinicManager.Add(_mapper.Map<ContactClinicVM>(contact)).IsSuccess)
+        //        {
+        //            TempData["ContactSuccessMsg"] = "Kayıt başarılı!";
+        //            return RedirectToAction("CustomerInformations", "home");
+
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("", "Kullanıcı oluştu! Ancak rolü atanamadı! Sistem yöneticisine ulaşarak rol ataması yapılmalıdır!");
+        //            return View(model);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return View(model);
+        //    }
+
+        //}
 
     }
 }
