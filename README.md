@@ -24,5 +24,5 @@ Ekran resimleri ise aşağıdaki gibidir.
 ![login](https://github.com/kaanxcolak/PetikoyVeterinary/assets/75448807/fe9f6fce-d73a-4cec-a637-7234f5a40b2c)
 ![register](https://github.com/kaanxcolak/PetikoyVeterinary/assets/75448807/60a12438-cbbd-476e-b44a-d825e97e9771)
 ![createAppointments](https://github.com/kaanxcolak/PetikoyVeterinary/assets/75448807/e73de532-7f51-487b-bba5-8eda385817ab)
-![AllContacts](https://github.com/kaanxcolak/PetikoyVeterinary/assets/75448807/38849d13-fa1b-49c0-9777-cb91d0f2117a)
+![Appointments](https://github.com/kaanxcolak/PetikoyVeterinary/assets/75448807/1b2440e0-ad3e-45e1-98fc-d5f830924935)
 ![AllContacts](https://github.com/kaanxcolak/PetikoyVeterinary/assets/75448807/c8dfb575-9180-494b-a913-040d8772c615)
